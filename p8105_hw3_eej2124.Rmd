@@ -4,3 +4,11 @@ author: "Emma"
 date: "2026-10-09"
 output: github_document
 ---
+
+```{r message = F}
+library(tidyverse)
+library(p8105.datasets)
+data("ny_noaa")
+```
+
+# Problem 1 
