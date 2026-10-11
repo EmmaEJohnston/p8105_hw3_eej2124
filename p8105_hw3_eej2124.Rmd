@@ -7,8 +7,60 @@ output: github_document
 
 ```{r message = F}
 library(tidyverse)
-library(p8105.datasets)
-data("ny_noaa")
 ```
 
 # Problem 1 
+
+```{r}
+library(p8105.datasets)
+
+data("ny_noaa")
+```
+
+
+# Problem 2
+
+```{r}
+demographic_df =
+  read_csv("data/nhanes_demographics.csv",
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
+
+```{r}
+accelerometer_df = 
+  read_csv("data/nhanes_accel.csv", 
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
+
+
+# Problem 3 
+
+```{r}
+jan2020_df = 
+  read_csv("data/citibike/Jan 2020 Citi.csv", 
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
+
+```{r}
+jan2024_df = 
+  read_csv("data/citibike/Jan 2024 Citi.csv", 
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
+
+```{r}
+july2020_df = 
+  read_csv("data/citibike/July 2020 Citi.csv", 
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
+
+```{r}
+july2024_df = 
+  read_csv("data/citibike/July 2024 Citi.csv", 
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names()
+```
