@@ -7,6 +7,7 @@ output: github_document
 
 ```{r message = F}
 library(tidyverse)
+library(patchwork)
 ```
 
 # Problem 1 
@@ -20,19 +21,44 @@ data("ny_noaa")
 
 # Problem 2
 
+## Import, clean, and tidy the data 
+
 ```{r}
 demographic_df =
   read_csv("data/nhanes_demographics.csv",
+           skip = 4,
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names() |> 
+  drop_na() |> 
+  filter(age >= 21) |> 
+  mutate(
+    sex = case_match(
+      sex, 
+     1 ~ c("male"), 
+     2 ~ c("female")), 
+    education = case_match(
+      education, 
+      1 ~ c("less than high school"), 
+      2 ~ c("high school equivalent"), 
+      3 ~ c("more than high school")
+    ))
 ```
 
 ```{r}
 accelerometer_df = 
   read_csv("data/nhanes_accel.csv", 
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names() |> 
+  drop_na()
 ```
+
+## Merge the datasets 
+
+```{r}
+demo_accel_df = 
+  left_join(demographic_df, accelerometer_df, by = "seqn")
+```
+
 
 
 # Problem 3 
