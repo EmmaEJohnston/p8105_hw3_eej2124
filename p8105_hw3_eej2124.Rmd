@@ -18,6 +18,11 @@ library(p8105.datasets)
 data("ny_noaa")
 ```
 
+```{r}
+noaa_df = 
+  data("ny_noaa")
+```
+
 
 # Problem 2
 
