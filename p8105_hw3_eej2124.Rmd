@@ -106,31 +106,67 @@ demo_accel_df |>
 
 
 # Problem 3 
-
+## Import and clean data 
 ```{r}
 jan2020_df = 
   read_csv("data/citibike/Jan 2020 Citi.csv", 
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names() |> 
+  mutate(date = "jan2020") 
 ```
 
 ```{r}
 jan2024_df = 
   read_csv("data/citibike/Jan 2024 Citi.csv", 
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names()|> 
+  mutate(date = "jan2024") 
 ```
 
 ```{r}
 july2020_df = 
   read_csv("data/citibike/July 2020 Citi.csv", 
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names() |> 
+  mutate(date = "july2020") 
 ```
 
 ```{r}
 july2024_df = 
   read_csv("data/citibike/July 2024 Citi.csv", 
            na = c("", "NA", ".")) |> 
-  janitor::clean_names()
+  janitor::clean_names() |> 
+  mutate(date = "july2024") 
 ```
+#Do i need to tidy more?
+
+## Bind Rows 
+
+```{r}
+citi_bikes_df = 
+  bind_rows(jan2020_df, july2020_df, jan2024_df, july2024_df) |> 
+  relocate(date)
+```
+
+## Table 1 
+
+```{r}
+citi_bikes_df |> 
+  group_by(date, member_casual) |> 
+  summarize(
+    rides = n()
+  ) |> 
+  knitr::kable(digits = 2)
+```
+This table shows that... number of total rides increased over 4 years (more than double), more riders in the summer, especially more casual riders in the summer
+
+## Table 2
+
+```{r}
+#citi_bikes_df |> 
+#  filter(date = "july2024") |> 
+#  group_by(start_station_name) |> 
+ # summarize(
+ #   rides = n())
+```
+
