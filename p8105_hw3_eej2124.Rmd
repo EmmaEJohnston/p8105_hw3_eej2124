@@ -51,6 +51,7 @@ accelerometer_df =
   janitor::clean_names() |> 
   drop_na()
 ```
+# pivot longer 
 
 ## Merge the datasets 
 
@@ -112,7 +113,8 @@ jan2020_df =
   read_csv("data/citibike/Jan 2020 Citi.csv", 
            na = c("", "NA", ".")) |> 
   janitor::clean_names() |> 
-  mutate(date = "jan2020") 
+  mutate(month = "jan", 
+         year = "2020") 
 ```
 
 ```{r}
@@ -120,7 +122,8 @@ jan2024_df =
   read_csv("data/citibike/Jan 2024 Citi.csv", 
            na = c("", "NA", ".")) |> 
   janitor::clean_names()|> 
-  mutate(date = "jan2024") 
+  mutate(month = "jan", 
+         year = "2024") 
 ```
 
 ```{r}
@@ -128,7 +131,8 @@ july2020_df =
   read_csv("data/citibike/July 2020 Citi.csv", 
            na = c("", "NA", ".")) |> 
   janitor::clean_names() |> 
-  mutate(date = "july2020") 
+  mutate(month = "july",
+         year = "2020") 
 ```
 
 ```{r}
@@ -136,7 +140,8 @@ july2024_df =
   read_csv("data/citibike/July 2024 Citi.csv", 
            na = c("", "NA", ".")) |> 
   janitor::clean_names() |> 
-  mutate(date = "july2024") 
+  mutate(month = "july", 
+         year = "2024") 
 ```
 #Do i need to tidy more?
 
@@ -145,14 +150,15 @@ july2024_df =
 ```{r}
 citi_bikes_df = 
   bind_rows(jan2020_df, july2020_df, jan2024_df, july2024_df) |> 
-  relocate(date)
+  relocate(month, year) |> 
+  drop_na()
 ```
 
 ## Table 1 
 
 ```{r}
 citi_bikes_df |> 
-  group_by(date, member_casual) |> 
+  group_by(month, year, member_casual) |> 
   summarize(
     rides = n()
   ) |> 
@@ -163,10 +169,29 @@ This table shows that... number of total rides increased over 4 years (more than
 ## Table 2
 
 ```{r}
-#citi_bikes_df |> 
-#  filter(date = "july2024") |> 
+# citi_bikes_df |> 
+#  filter(month == "july", year == "2024") |> 
 #  group_by(start_station_name) |> 
- # summarize(
- #   rides = n())
+#    summarize(
+ #     rides = n(), 
+ #     station_rank = min_rank(desc(n))
+ #   ) 
 ```
+#DO THIS
+
+## Plot 
+
+```{r}
+citi_bikes_df |> 
+  ggplot(aes(x = weekdays, y = duration, fill = month)) +
+  geom_boxplot() +
+  viridis::scale_color_viridis(
+    discrete = TRUE
+  ) +
+  theme_minimal() +
+  facet_grid(. ~year)
+```
+# This looks terrible! - also median ride duration 
+
+## Plot 2 
 
