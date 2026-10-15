@@ -69,6 +69,7 @@ demo_accel_df |>
   ) |> 
   knitr::kable(digits = 2)
 ```
+There are a similar number of men and women who have more than a high school education, and a similar number of men and women who have less than a high school education. Interestingly, many more men have a high school equivalent education compared to women. More people have more than a high school education compared to any other education category. 
 
 ## Making a visualization 
 
@@ -86,7 +87,22 @@ demo_accel_df |>
   theme_minimal()
 
 ```
+Both men and women who completed more than a high school education tend to be younger than the compare groups, and both men and women who who completed less than a high school education tend to be older than the compare groups. Interestingly, of those who completed only a high school equivalent of education, the women tend to be older and the men tend to be younger. 
 
+## Total activity 
+
+```{r}
+demo_accel_df |> 
+  mutate(activity = sum(min1:min1440))
+```
+# how do i sum all mins?
+
+## Activity over the day 
+```{r}
+demo_accel_df |> 
+  group_by(education, sex) |> 
+  ggplot(aes(x = min1:min10, y = ))
+```
 
 
 # Problem 3 
