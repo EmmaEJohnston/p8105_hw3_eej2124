@@ -59,6 +59,34 @@ demo_accel_df =
   left_join(demographic_df, accelerometer_df, by = "seqn")
 ```
 
+## Making a reader-friendly table  
+
+```{r}
+demo_accel_df |> 
+  group_by(education, sex) |> 
+  summarize(
+    count= n()
+  ) |> 
+  knitr::kable(digits = 2)
+```
+
+## Making a visualization 
+
+```{r}
+demo_accel_df |> 
+  mutate(education = fct_relevel(education, c("less than high school", "high school equivalent", "more than high school"))) |>
+  ggplot(aes(x = education, y = age, fill = sex)) +
+  geom_boxplot() +
+  labs(
+    title = "Age distribution for men and women in each educational category"
+  ) +
+  viridis::scale_color_viridis(
+    discrete = TRUE
+  ) +
+  theme_minimal()
+
+```
+
 
 
 # Problem 3 
