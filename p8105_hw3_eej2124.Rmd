@@ -12,6 +12,7 @@ library(patchwork)
 
 # Problem 1 
 
+## Data import
 ```{r}
 library(p8105.datasets)
 
@@ -20,7 +21,15 @@ data("ny_noaa")
 
 ```{r}
 noaa_df = 
-  data("ny_noaa")
+  data("ny_noaa") 
+```
+This dataset has `r ncol(ny_noaa)` columns and `r nrow(ny_noaa)` rows. It has a number of variables to show weather data from around the world. These variables include the weather station `id`, the `date` when the measurements were taken, and the measurements themselves, including precipitation `prcp`, amount of snow `snow`, snow depth `snwd`, and maximum `tmax` and minimum `tmin` temperatures. Missing data seems to be a significant issue in this dataset, as many of the data is `NA`. 
+
+## Data Cleaning 
+
+Separate variables for date 
+```{r}
+
 ```
 
 
@@ -54,7 +63,13 @@ accelerometer_df =
   read_csv("data/nhanes_accel.csv", 
            na = c("", "NA", ".")) |> 
   janitor::clean_names() |> 
-  drop_na()
+  drop_na() |> 
+  pivot_longer(
+    min1:min1440, 
+    names_to = "minute", 
+    names_prefix = "min",
+    values_to = "mims"
+  )
 ```
 # pivot longer 
 
@@ -71,7 +86,7 @@ demo_accel_df =
 demo_accel_df |> 
   group_by(education, sex) |> 
   summarize(
-    count= n()
+    n_people = n_distinct(seqn)
   ) |> 
   knitr::kable(digits = 2)
 ```
@@ -91,23 +106,29 @@ demo_accel_df |>
     discrete = TRUE
   ) +
   theme_minimal()
-
 ```
 Both men and women who completed more than a high school education tend to be younger than the compare groups, and both men and women who who completed less than a high school education tend to be older than the compare groups. Interestingly, of those who completed only a high school equivalent of education, the women tend to be older and the men tend to be younger. 
 
 ## Total activity 
 
 ```{r}
-demo_accel_df |> 
-  mutate(activity = sum(min1:min1440))
+demo_accel_df |>  
+  group_by(seqn) |> 
+  mutate(
+    activity = sum(mims)) |> 
+  ggplot(aes(x = age, y = activity, color = sex)) +
+  geom_point() + 
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ education) +
+  theme_minimal()
 ```
-# how do i sum all mins?
+This plot
 
 ## Activity over the day 
 ```{r}
-demo_accel_df |> 
-  group_by(education, sex) |> 
-  ggplot(aes(x = min1:min10, y = ))
+#demo_accel_df |> 
+  #group_by(education, sex) |> 
+ # ggplot(aes(x = min1:min10, y = ))
 ```
 
 
