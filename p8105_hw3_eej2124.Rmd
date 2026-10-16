@@ -27,7 +27,6 @@ This dataset has `r ncol(ny_noaa)` columns and `r nrow(ny_noaa)` rows. It has a 
 
 ## Data Cleaning 
 
-Separate variables for date 
 ```{r}
 #ny_noaa = 
  # mutate(
@@ -37,6 +36,7 @@ Separate variables for date
   #)
 ```
 
+# Separate variables for date 
 
 # Problem 2
 
@@ -129,6 +129,7 @@ demo_accel_df |>
 This plot shows general downward trends in activity levels across education levels and sexes. However, there are large variations in activity levels within each of these groups. Participants with more than a high school education tend to have less change in activity level as they age, although there is still a slight downward trend. 
 
 ## Activity over the day 
+
 ```{r}
 #demo_accel_df |> 
 #  group_by(minute, education, sex) |> 
@@ -138,10 +139,12 @@ This plot shows general downward trends in activity levels across education leve
   #theme_minimal()
 
 ```
+
 # This is bad fix this
 
 # Problem 3 
 ## Import and clean data 
+
 ```{r}
 jan2020_df = 
   read_csv("data/citibike/Jan 2020 Citi.csv", 
@@ -177,7 +180,8 @@ july2024_df =
   mutate(month = "july", 
          year = "2024") 
 ```
-#Do i need to tidy more?
+
+# Do i need to tidy more?
 
 ## Bind Rows 
 
@@ -238,6 +242,12 @@ Interestingly, the median ride duration decreased in both January and July from 
 ## Plot 2 
 
 ```{r}
-
+citi_bikes_df |> 
+  filter(year == "2024") |> 
+  group_by(month, member_casual, rideable_type) |> 
+  ggplot(aes(x = rideable_type, y = duration, fill = member_casual)) +
+  geom_violin() +
+  facet_grid(.~ month) +
+  theme_minimal()
 ```
-
+# This is bad
