@@ -29,7 +29,12 @@ This dataset has `r ncol(ny_noaa)` columns and `r nrow(ny_noaa)` rows. It has a 
 
 Separate variables for date 
 ```{r}
-
+#ny_noaa = 
+ # mutate(
+ #   year = c("1:4"), 
+ #   month = c("6:7"), 
+ #   day = c("9:10")
+  #)
 ```
 
 
@@ -71,7 +76,6 @@ accelerometer_df =
     values_to = "mims"
   )
 ```
-# pivot longer 
 
 ## Merge the datasets 
 
@@ -122,15 +126,19 @@ demo_accel_df |>
   facet_grid(. ~ education) +
   theme_minimal()
 ```
-This plot
+This plot shows general downward trends in activity levels across education levels and sexes. However, there are large variations in activity levels within each of these groups. Participants with more than a high school education tend to have less change in activity level as they age, although there is still a slight downward trend. 
 
 ## Activity over the day 
 ```{r}
 #demo_accel_df |> 
-  #group_by(education, sex) |> 
- # ggplot(aes(x = min1:min10, y = ))
-```
+#  group_by(minute, education, sex) |> 
+ # ggplot(aes(x = minute, y = mims, color = sex)) +
+  #geom_point() + 
+  #facet_grid(. ~ education) +
+  #theme_minimal()
 
+```
+# This is bad fix this
 
 # Problem 3 
 ## Import and clean data 
@@ -190,20 +198,21 @@ citi_bikes_df |>
   ) |> 
   knitr::kable(digits = 2)
 ```
-This table shows that... number of total rides increased over 4 years (more than double), more riders in the summer, especially more casual riders in the summer
+This table shows that the total number of rides occurring increased over 4 years, at least doubling in most cases, showing an increase in popularity of Citi Bikes. In both 2020 and 2024, there were more riders of all types in the summer, but casual riders specifically significantly increased.
 
 ## Table 2
 
 ```{r}
-# citi_bikes_df |> 
-#  filter(month == "july", year == "2024") |> 
-#  group_by(start_station_name) |> 
-#    summarize(
- #     rides = n(), 
- #     station_rank = min_rank(desc(n))
- #   ) 
+citi_bikes_df |> 
+  filter(month == "july", year == "2024") |> 
+  group_by(start_station_name) |> 
+  summarize(
+    rides = n()) |> 
+  arrange(desc(rides)) |> 
+  slice_head(n = 5) |> 
+  knitr::kable(digits = 2)
 ```
-#DO THIS
+
 
 ## Plot 
 
