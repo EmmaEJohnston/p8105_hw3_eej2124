@@ -187,7 +187,7 @@ Both men and women who completed more than a high school education tend to be yo
 demo_accel_df |>  
   group_by(seqn) |> 
   mutate(
-    activity = sum(mims)) |> 
+    activity = sum(mims, na.rm = TRUE)) |> 
   ggplot(aes(x = age, y = activity, color = sex)) +
   geom_point() + 
   geom_smooth(se = FALSE) +
@@ -199,18 +199,29 @@ This plot shows general downward trends in activity levels across education leve
 ## Activity over the day 
 
 ```{r}
-#demo_accel_df |> 
-#  group_by(minute, education, sex) |> 
- # ggplot(aes(x = minute, y = mims, color = sex)) +
-  #geom_point() + 
-  #facet_grid(. ~ education) +
-  #theme_minimal()
-
+demo_accel_df |> 
+  mutate(
+    minute = as.numeric(minute)
+  ) |> 
+  group_by(minute, education, sex) |>
+  summarize( 
+    mean_mims = mean(mims, na.rm = TRUE)) |> 
+  ggplot(aes(x = minute / 60, y = mean_mims, color = sex)) +
+  geom_line() + 
+  geom_smooth() +
+  facet_grid(. ~ education) +
+  scale_x_continuous(breaks = seq(0, 24, 6)) +
+  labs(
+    title = "24-hour activity time courses across  education level and sex",
+    x = "Hour of day",
+    y = "Mean MIMS"
+  ) +
+  theme_minimal()
 ```
-
-# This is bad fix this
+This plot shows the activity levels of participants over the course of 24 hours, across each education level and sex. In general, women tend to have higher activity levels than men. Those with less than a high school education have higher activity level peaks earlier in the day than those with more than a high school education or with a high school education equivalent. However, those with more than a high school education have more sustained activity throughout the day than other education levels. 
 
 # Problem 3 
+
 ## Import and clean data 
 
 ```{r}
@@ -251,7 +262,7 @@ july2024_df =
 
 # Do i need to tidy more?
 
-## Bind Rows 
+## Binding Rows 
 
 ```{r}
 citi_bikes_df = 
@@ -272,7 +283,7 @@ citi_bikes_df |>
 ```
 This table shows that the total number of rides occurring increased over 4 years, at least doubling in most cases, showing an increase in popularity of Citi Bikes. In both 2020 and 2024, there were more riders of all types in the summer, but casual riders specifically significantly increased.
 
-## Table 2
+## Most popular starting stations
 
 ```{r}
 citi_bikes_df |> 
@@ -284,8 +295,9 @@ citi_bikes_df |>
   slice_head(n = 5) |> 
   knitr::kable(digits = 2)
 ```
+In July 2024, the most popular start station was Pier 61 at Chelsea Piers, with 163 total rides occurring. 
 
-## Plot 
+## Plot of effect of weekday, month, and year on median ride duration 
 
 ```{r}
 citi_bikes_df |> 
@@ -307,15 +319,21 @@ citi_bikes_df |>
 ```
 Interestingly, the median ride duration decreased in both January and July from 2020 to 2024. This may be a result of increasing prices for longer Citi Bike rides. In July, ride duration tends to be longer, most likely due to the warmer weather. For both January and July in 2020 and 2024, the longest median ride duration occurs on Saturday. The weekend tends to have longer ride duration, except for Sunday in January 2024, which has significantly shorter ride durations. 
 
-## Plot 2 
+## Plot of the impact of month, membership status, and bike type of ride duration
 
 ```{r}
 citi_bikes_df |> 
-  filter(year == "2024") |> 
-  group_by(month, member_casual, rideable_type) |> 
+  filter(year == "2024", duration > 0) |> 
   ggplot(aes(x = rideable_type, y = duration, fill = member_casual)) +
-  geom_violin() +
+  geom_boxplot() +
+  scale_y_log10() +
   facet_grid(.~ month) +
+  labs(
+    title = "The impact of month, membership status, and bike type of ride duration",
+    x = "bike type",
+    y = "ride duration (log scale)",
+    fill = "membership status"
+  ) +
   theme_minimal()
 ```
-# This is bad
+There were many ride duration data point outliers in this data set, most likely due to improper docking. These dramatically skewed the plot. In order to better interpret the data, I changed the ride duration to a log scale. For Citi Bike members, bike type and month do not have huge impacts on ride duration. This may be because members tend to use Citi Bikes more regularly, for purposes like commuting, which has a similar duration year round. However, for casual riders, ride duration is longer on classic bikes, which are less expensive than electric bikes, and in July, which is better weather for biking than January. 
