@@ -260,8 +260,6 @@ july2024_df =
          year = "2024") 
 ```
 
-# Do i need to tidy more?
-
 ## Binding Rows 
 
 ```{r}
